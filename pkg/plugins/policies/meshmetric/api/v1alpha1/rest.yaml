@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshmetrics/{name}:
     get:
+      operationId: get-mm
+      x-speakeasy-entity-operation: "MeshMetric#get"
       summary: Returns MeshMetric entity
       tags: [ "MeshMetric" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshMetricItem"
 
     put:
+      operationId: create-or-update-mm
+      x-speakeasy-entity-operation: "MeshMetric#put"
       summary: Creates or Updates MeshMetric entity
       tags: [ "MeshMetric" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshMetricCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mm
+      x-speakeasy-entity-operation: "MeshMetric#delete"
       summary: Deletes MeshMetric entity
       tags: [ "MeshMetric" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshmetrics:
     get:
+      operationId: get-mm-list
+      x-speakeasy-entity-operation: "MeshMetricList#get"
       summary: Returns a list of MeshMetric in the mesh.
       tags: [ "MeshMetric" ]
       parameters:

@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshhealthchecks/{name}:
     get:
+      operationId: get-mhc
+      x-speakeasy-entity-operation: "MeshHealthCheck#get"
       summary: Returns MeshHealthCheck entity
       tags: [ "MeshHealthCheck" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshHealthCheckItem"
 
     put:
+      operationId: create-or-update-mhc
+      x-speakeasy-entity-operation: "MeshHealthCheck#put"
       summary: Creates or Updates MeshHealthCheck entity
       tags: [ "MeshHealthCheck" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshHealthCheckCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mhc
+      x-speakeasy-entity-operation: "MeshHealthCheck#delete"
       summary: Deletes MeshHealthCheck entity
       tags: [ "MeshHealthCheck" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshhealthchecks:
     get:
+      operationId: get-mhc-list
+      x-speakeasy-entity-operation: "MeshHealthCheckList#get"
       summary: Returns a list of MeshHealthCheck in the mesh.
       tags: [ "MeshHealthCheck" ]
       parameters:

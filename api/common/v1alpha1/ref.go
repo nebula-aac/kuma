@@ -7,13 +7,14 @@ import (
 	"sort"
 	"strings"
 
-	"golang.org/x/exp/maps"
+	util_maps "github.com/kumahq/kuma/pkg/util/maps"
 )
 
 type TargetRefKind string
 
 var (
 	Mesh                 TargetRefKind = "Mesh"
+	Dataplane            TargetRefKind = "Dataplane"
 	MeshSubset           TargetRefKind = "MeshSubset"
 	MeshGateway          TargetRefKind = "MeshGateway"
 	MeshService          TargetRefKind = "MeshService"
@@ -25,13 +26,14 @@ var (
 
 var order = map[TargetRefKind]int{
 	Mesh:                 1,
-	MeshSubset:           2,
-	MeshGateway:          3,
-	MeshService:          4,
-	MeshExternalService:  5,
-	MeshMultiZoneService: 6,
-	MeshServiceSubset:    7,
-	MeshHTTPRoute:        8,
+	Dataplane:            2,
+	MeshSubset:           3,
+	MeshGateway:          4,
+	MeshService:          5,
+	MeshExternalService:  6,
+	MeshMultiZoneService: 7,
+	MeshServiceSubset:    8,
+	MeshHTTPRoute:        9,
 }
 
 // +kubebuilder:validation:Enum=Sidecar;Gateway
@@ -67,7 +69,7 @@ func (k TargetRefKind) IsOldKind() bool {
 }
 
 func AllTargetRefKinds() []TargetRefKind {
-	keys := maps.Keys(order)
+	keys := util_maps.AllKeys(order)
 	sort.Sort(TargetRefKindSlice(keys))
 	return keys
 }
@@ -80,8 +82,12 @@ func (x TargetRefKindSlice) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
 // TargetRef defines structure that allows attaching policy to various objects
 type TargetRef struct {
+	// This is needed to not sync policies with empty topLevelTarget ref to old zones that does not support it
+	// This can be removed in 2.11.x
+	UsesSyntacticSugar bool `json:"-"`
+
 	// Kind of the referenced resource
-	// +kubebuilder:validation:Enum=Mesh;MeshSubset;MeshGateway;MeshService;MeshExternalService;MeshMultiZoneService;MeshServiceSubset;MeshHTTPRoute
+	// +kubebuilder:validation:Enum=Mesh;MeshSubset;MeshGateway;MeshService;MeshExternalService;MeshMultiZoneService;MeshServiceSubset;MeshHTTPRoute;Dataplane
 	Kind TargetRefKind `json:"kind,omitempty"`
 	// Name of the referenced resource. Can only be used with kinds: `MeshService`,
 	// `MeshServiceSubset` and `MeshGatewayRoute`
@@ -140,19 +146,29 @@ func (b BackendRef) ReferencesRealObject() bool {
 	}
 }
 
+// MatchesHash is used to hash route matches to determine the origin resource
+// for a ref
+type MatchesHash string
+
 type BackendRefHash string
 
 // Hash returns a hash of the BackendRef
 func (in BackendRef) Hash() BackendRefHash {
-	keys := maps.Keys(in.Tags)
-	sort.Strings(keys)
+	keys := util_maps.SortedKeys(in.Tags)
 	orderedTags := make([]string, 0, len(keys))
 	for _, k := range keys {
 		orderedTags = append(orderedTags, fmt.Sprintf("%s=%s", k, in.Tags[k]))
 	}
+
+	keys = util_maps.SortedKeys(in.Labels)
+	orderedLabels := make([]string, 0, len(in.Labels))
+	for _, k := range keys {
+		orderedLabels = append(orderedLabels, fmt.Sprintf("%s=%s", k, in.Labels[k]))
+	}
+
 	name := in.Name
 	if in.Port != nil {
 		name = fmt.Sprintf("%s_svc_%d", in.Name, *in.Port)
 	}
-	return BackendRefHash(fmt.Sprintf("%s/%s/%s/%s", in.Kind, name, strings.Join(orderedTags, "/"), in.Mesh))
+	return BackendRefHash(fmt.Sprintf("%s/%s/%s/%s/%s", in.Kind, name, strings.Join(orderedTags, "/"), strings.Join(orderedLabels, "/"), in.Mesh))
 }

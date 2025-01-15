@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshtimeouts/{name}:
     get:
+      operationId: get-mt
+      x-speakeasy-entity-operation: "MeshTimeout#get"
       summary: Returns MeshTimeout entity
       tags: [ "MeshTimeout" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshTimeoutItem"
 
     put:
+      operationId: create-or-update-mt
+      x-speakeasy-entity-operation: "MeshTimeout#put"
       summary: Creates or Updates MeshTimeout entity
       tags: [ "MeshTimeout" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshTimeoutCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mt
+      x-speakeasy-entity-operation: "MeshTimeout#delete"
       summary: Deletes MeshTimeout entity
       tags: [ "MeshTimeout" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshtimeouts:
     get:
+      operationId: get-mt-list
+      x-speakeasy-entity-operation: "MeshTimeoutList#get"
       summary: Returns a list of MeshTimeout in the mesh.
       tags: [ "MeshTimeout" ]
       parameters:

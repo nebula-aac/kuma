@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshtcproutes/{name}:
     get:
+      operationId: get-mtcpr
+      x-speakeasy-entity-operation: "MeshTCPRoute#get"
       summary: Returns MeshTCPRoute entity
       tags: [ "MeshTCPRoute" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshTCPRouteItem"
 
     put:
+      operationId: create-or-update-mtcpr
+      x-speakeasy-entity-operation: "MeshTCPRoute#put"
       summary: Creates or Updates MeshTCPRoute entity
       tags: [ "MeshTCPRoute" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshTCPRouteCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mtcpr
+      x-speakeasy-entity-operation: "MeshTCPRoute#delete"
       summary: Deletes MeshTCPRoute entity
       tags: [ "MeshTCPRoute" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshtcproutes:
     get:
+      operationId: get-mtcpr-list
+      x-speakeasy-entity-operation: "MeshTCPRouteList#get"
       summary: Returns a list of MeshTCPRoute in the mesh.
       tags: [ "MeshTCPRoute" ]
       parameters:

@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshaccesslogs/{name}:
     get:
+      operationId: get-mal
+      x-speakeasy-entity-operation: "MeshAccessLog#get"
       summary: Returns MeshAccessLog entity
       tags: [ "MeshAccessLog" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshAccessLogItem"
 
     put:
+      operationId: create-or-update-mal
+      x-speakeasy-entity-operation: "MeshAccessLog#put"
       summary: Creates or Updates MeshAccessLog entity
       tags: [ "MeshAccessLog" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshAccessLogCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mal
+      x-speakeasy-entity-operation: "MeshAccessLog#delete"
       summary: Deletes MeshAccessLog entity
       tags: [ "MeshAccessLog" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshaccesslogs:
     get:
+      operationId: get-mal-list
+      x-speakeasy-entity-operation: "MeshAccessLogList#get"
       summary: Returns a list of MeshAccessLog in the mesh.
       tags: [ "MeshAccessLog" ]
       parameters:

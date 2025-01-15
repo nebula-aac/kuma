@@ -8,6 +8,8 @@ info:
 paths:
   /hostnamegenerators/{name}:
     get:
+      operationId: get-hg
+      x-speakeasy-entity-operation: "HostnameGenerator#get"
       summary: Returns HostnameGenerator entity
       tags: [ "HostnameGenerator" ]
       parameters:
@@ -22,6 +24,8 @@ paths:
           $ref: "#/components/responses/HostnameGeneratorItem"
 
     put:
+      operationId: create-or-update-hg
+      x-speakeasy-entity-operation: "HostnameGenerator#put"
       summary: Creates or Updates HostnameGenerator entity
       tags: [ "HostnameGenerator" ]
       parameters:
@@ -53,6 +57,8 @@ paths:
                 $ref: '#/components/schemas/HostnameGeneratorCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-hg
+      x-speakeasy-entity-operation: "HostnameGenerator#delete"
       summary: Deletes HostnameGenerator entity
       tags: [ "HostnameGenerator" ]
       parameters:
@@ -65,9 +71,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /hostnamegenerators:
     get:
+      operationId: get-hg-list
+      x-speakeasy-entity-operation: "HostnameGeneratorList#get"
       summary: Returns a list of HostnameGenerator in the mesh.
       tags: [ "HostnameGenerator" ]
       responses:

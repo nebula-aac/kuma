@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshexternalservices/{name}:
     get:
+      operationId: get-extsvc
+      x-speakeasy-entity-operation: "MeshExternalService#get"
       summary: Returns MeshExternalService entity
       tags: [ "MeshExternalService" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshExternalServiceItem"
 
     put:
+      operationId: create-or-update-extsvc
+      x-speakeasy-entity-operation: "MeshExternalService#put"
       summary: Creates or Updates MeshExternalService entity
       tags: [ "MeshExternalService" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshExternalServiceCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-extsvc
+      x-speakeasy-entity-operation: "MeshExternalService#delete"
       summary: Deletes MeshExternalService entity
       tags: [ "MeshExternalService" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshexternalservices:
     get:
+      operationId: get-extsvc-list
+      x-speakeasy-entity-operation: "MeshExternalServiceList#get"
       summary: Returns a list of MeshExternalService in the mesh.
       tags: [ "MeshExternalService" ]
       parameters:

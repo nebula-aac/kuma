@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshpassthroughs/{name}:
     get:
+      operationId: get-mp
+      x-speakeasy-entity-operation: "MeshPassthrough#get"
       summary: Returns MeshPassthrough entity
       tags: [ "MeshPassthrough" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshPassthroughItem"
 
     put:
+      operationId: create-or-update-mp
+      x-speakeasy-entity-operation: "MeshPassthrough#put"
       summary: Creates or Updates MeshPassthrough entity
       tags: [ "MeshPassthrough" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshPassthroughCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mp
+      x-speakeasy-entity-operation: "MeshPassthrough#delete"
       summary: Deletes MeshPassthrough entity
       tags: [ "MeshPassthrough" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshpassthroughs:
     get:
+      operationId: get-mp-list
+      x-speakeasy-entity-operation: "MeshPassthroughList#get"
       summary: Returns a list of MeshPassthrough in the mesh.
       tags: [ "MeshPassthrough" ]
       parameters:

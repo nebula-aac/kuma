@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshloadbalancingstrategies/{name}:
     get:
+      operationId: get-mlbs
+      x-speakeasy-entity-operation: "MeshLoadBalancingStrategy#get"
       summary: Returns MeshLoadBalancingStrategy entity
       tags: [ "MeshLoadBalancingStrategy" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshLoadBalancingStrategyItem"
 
     put:
+      operationId: create-or-update-mlbs
+      x-speakeasy-entity-operation: "MeshLoadBalancingStrategy#put"
       summary: Creates or Updates MeshLoadBalancingStrategy entity
       tags: [ "MeshLoadBalancingStrategy" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshLoadBalancingStrategyCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mlbs
+      x-speakeasy-entity-operation: "MeshLoadBalancingStrategy#delete"
       summary: Deletes MeshLoadBalancingStrategy entity
       tags: [ "MeshLoadBalancingStrategy" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshloadbalancingstrategies:
     get:
+      operationId: get-mlbs-list
+      x-speakeasy-entity-operation: "MeshLoadBalancingStrategyList#get"
       summary: Returns a list of MeshLoadBalancingStrategy in the mesh.
       tags: [ "MeshLoadBalancingStrategy" ]
       parameters:

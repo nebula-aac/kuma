@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshratelimits/{name}:
     get:
+      operationId: get-mrl
+      x-speakeasy-entity-operation: "MeshRateLimit#get"
       summary: Returns MeshRateLimit entity
       tags: [ "MeshRateLimit" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshRateLimitItem"
 
     put:
+      operationId: create-or-update-mrl
+      x-speakeasy-entity-operation: "MeshRateLimit#put"
       summary: Creates or Updates MeshRateLimit entity
       tags: [ "MeshRateLimit" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshRateLimitCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-mrl
+      x-speakeasy-entity-operation: "MeshRateLimit#delete"
       summary: Deletes MeshRateLimit entity
       tags: [ "MeshRateLimit" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshratelimits:
     get:
+      operationId: get-mrl-list
+      x-speakeasy-entity-operation: "MeshRateLimitList#get"
       summary: Returns a list of MeshRateLimit in the mesh.
       tags: [ "MeshRateLimit" ]
       parameters:

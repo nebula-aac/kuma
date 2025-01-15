@@ -8,6 +8,8 @@ info:
 paths:
   /meshes/{mesh}/meshservices/{name}:
     get:
+      operationId: get-msvc
+      x-speakeasy-entity-operation: "MeshService#get"
       summary: Returns MeshService entity
       tags: [ "MeshService" ]
       parameters:
@@ -28,6 +30,8 @@ paths:
           $ref: "#/components/responses/MeshServiceItem"
 
     put:
+      operationId: create-or-update-msvc
+      x-speakeasy-entity-operation: "MeshService#put"
       summary: Creates or Updates MeshService entity
       tags: [ "MeshService" ]
       parameters:
@@ -65,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/MeshServiceCreateOrUpdateSuccessResponse'
 
     delete:
+      operationId: delete-msvc
+      x-speakeasy-entity-operation: "MeshService#delete"
       summary: Deletes MeshService entity
       tags: [ "MeshService" ]
       parameters:
@@ -83,9 +89,13 @@ paths:
       responses:
         '200':
           description: Successful response
+        '404':
+          $ref: "/specs/base/specs/common/error_schema.yaml#/components/responses/NotFound"
 
   /meshes/{mesh}/meshservices:
     get:
+      operationId: get-msvc-list
+      x-speakeasy-entity-operation: "MeshServiceList#get"
       summary: Returns a list of MeshService in the mesh.
       tags: [ "MeshService" ]
       parameters:
