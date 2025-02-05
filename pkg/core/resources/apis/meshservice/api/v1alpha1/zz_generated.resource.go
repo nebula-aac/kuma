@@ -161,6 +161,10 @@ var MeshServiceResourceTypeDescriptor = model.ResourceTypeDescriptor{
 	IsTargetRefBased:             false,
 	HasToTargetRef:               false,
 	HasFromTargetRef:             false,
+	HasRulesTargetRef:            false,
 	HasStatus:                    true,
 	AllowedOnSystemNamespaceOnly: false,
+	IsReferenceableInTo:          true,
+	ShortName:                    "msvc",
+	InterpretFromEntriesAsRules:  false,
 }

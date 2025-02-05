@@ -228,6 +228,24 @@ to:
       name: web-backend
     default:
       connectionLimits: { }`),
+			XEntry("with MeshExternalService example", `
+targetRef:
+  kind: Mesh
+to:
+  - targetRef:
+      kind: MeshExternalService
+      name: web-backend
+    default:
+      connectionLimits: { }`),
+			Entry("with MeshMultiZoneService", `
+targetRef:
+  kind: Mesh
+to:
+  - targetRef:
+      kind: MeshMultiZoneService
+      name: web-backend
+    default:
+      connectionLimits: { }`),
 			Entry("gateway example", `
 targetRef:
   kind: MeshGateway
@@ -300,6 +318,23 @@ to:
 violations:
   - field: spec.to[0].targetRef.kind
     message: value is not supported`,
+			}),
+			Entry("sectionName with outbound policy", testCase{
+				inputYaml: `
+targetRef:
+  kind: Dataplane
+  sectionName: test
+to:
+  - targetRef:
+      kind: MeshServiceSubset
+    default:
+      connectionLimits: { }`,
+				expected: `
+violations:
+- field: spec.targetRef.sectionName
+  message: can only be used with inbound policies
+- field: spec.to[0].targetRef.kind
+  message: value is not supported`,
 			}),
 			Entry("missing configuration", testCase{
 				inputYaml: `
@@ -471,6 +506,25 @@ to:
 violations:
   - field: spec.to[0].default.outlierDetection.detectors.successRate.standardDeviationFactor
     message: 'invalid number'`,
+			}),
+			XEntry("status codes out of range in expectedStatuses", testCase{
+				inputYaml: `
+targetRef:
+  kind: MeshService
+  name: web-frontend
+to:
+  - targetRef:
+      kind: MeshExternalService
+      name: web-backend
+    default:
+      outlierDetection:
+        detectors:
+          successRate:
+            standardDeviationFactor: "1.9"`,
+				expected: `
+violations:
+  - field: spec.to[0].targetRef.kind
+    message: 'kind MeshExternalService is only allowed with targetRef.kind: Mesh as it is configured on the Zone Egress and shared by all clients in the mesh'`,
 			}),
 		)
 	})

@@ -149,6 +149,10 @@ var DoNothingResourceResourceTypeDescriptor = model.ResourceTypeDescriptor{
 	IsTargetRefBased:             false,
 	HasToTargetRef:               false,
 	HasFromTargetRef:             false,
+	HasRulesTargetRef:            false,
 	HasStatus:                    false,
 	AllowedOnSystemNamespaceOnly: false,
+	IsReferenceableInTo:          false,
+	ShortName:                    "dnr",
+	InterpretFromEntriesAsRules:  false,
 }
