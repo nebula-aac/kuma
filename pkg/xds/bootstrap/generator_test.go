@@ -207,6 +207,29 @@ var _ = Describe("bootstrapGenerator", func() {
 			expectedConfigFile: "generator.custom-config-minimal-request.golden.yaml",
 			hdsEnabled:         true,
 		}),
+		Entry("default config with minimal request with unified resource naming feature flag", testCase{
+			dpAuthForProxyType: map[string]bool{},
+			serverConfig: func() *bootstrap_config.BootstrapServerConfig {
+				cfg := bootstrap_config.DefaultBootstrapServerConfig()
+				cfg.Params.XdsHost = "localhost"
+				cfg.Params.XdsPort = 5678
+				return cfg
+			}(),
+			dataplane: func() *core_mesh.DataplaneResource {
+				dp := defaultDataplane()
+				dp.Spec.Networking.Admin.Port = 9902
+				return dp
+			},
+			request: types.BootstrapRequest{
+				Mesh:     "mesh",
+				Name:     "name.namespace",
+				Version:  defaultVersion,
+				Workdir:  "/tmp",
+				Features: []string{xds_types.FeatureUnifiedResourceNaming},
+			},
+			expectedConfigFile: "generator.custom-config-minimal-request-with-unified-resource-naming-feature-flag.golden.yaml",
+			hdsEnabled:         false,
+		}),
 		Entry("custom config with minimal request and delta", testCase{
 			dpAuthForProxyType: map[string]bool{},
 			serverConfig: func() *bootstrap_config.BootstrapServerConfig {
@@ -251,10 +274,9 @@ var _ = Describe("bootstrapGenerator", func() {
 			}(),
 			dataplane: defaultDataplane,
 			request: types.BootstrapRequest{
-				Mesh:            "mesh",
-				Name:            "name.namespace",
-				DataplaneToken:  "token",
-				OperatingSystem: "windows",
+				Mesh:           "mesh",
+				Name:           "name.namespace",
+				DataplaneToken: "token",
 				DynamicMetadata: map[string]string{
 					"test": "value",
 				},

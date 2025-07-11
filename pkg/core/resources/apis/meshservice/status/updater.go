@@ -20,6 +20,7 @@ import (
 	"github.com/kumahq/kuma/pkg/core/user"
 	core_metrics "github.com/kumahq/kuma/pkg/metrics"
 	"github.com/kumahq/kuma/pkg/util/maps"
+	"github.com/kumahq/kuma/pkg/util/pointer"
 	util_time "github.com/kumahq/kuma/pkg/util/time"
 )
 
@@ -121,9 +122,9 @@ func (s *StatusUpdater) updateStatus(ctx context.Context) error {
 		var changeReasons []string
 
 		identities := buildIdentities(dpps)
-		if !reflect.DeepEqual(ms.Spec.Identities, identities) {
+		if !reflect.DeepEqual(pointer.Deref(ms.Spec.Identities), identities) {
 			changeReasons = append(changeReasons, "identities")
-			ms.Spec.Identities = identities
+			ms.Spec.Identities = &identities
 		}
 
 		mesh := meshByKey[core_model.ResourceKey{Name: ms.Meta.GetMesh()}]
@@ -151,7 +152,7 @@ func (s *StatusUpdater) updateStatus(ctx context.Context) error {
 		if len(changeReasons) > 0 {
 			log.Info("updating mesh service", "reason", changeReasons)
 			if err := s.resManager.Update(ctx, ms); err != nil {
-				if errors.Is(err, &store.ResourceConflictError{}) {
+				if store.IsConflict(err) {
 					log.Info("couldn't update mesh service, because it was modified in another place. Will try again in the next interval", "interval", s.interval)
 				} else {
 					log.Error(err, "could not update mesh service", "reason", changeReasons)

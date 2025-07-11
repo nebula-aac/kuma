@@ -59,7 +59,7 @@ var _ = Describe("Updater", func() {
 			ms := meshservice_api.NewMeshServiceResource()
 			err := resManager.Get(context.Background(), ms, store.GetByKey("backend", model.DefaultMesh))
 			g.Expect(err).ToNot(HaveOccurred())
-			g.Expect(ms.Spec.Identities).To(Equal([]meshservice_api.MeshServiceIdentity{
+			g.Expect(ms.Spec.Identities).To(Equal(&[]meshservice_api.MeshServiceIdentity{
 				{
 					Type:  meshservice_api.MeshServiceIdentityServiceTagType,
 					Value: "backend",
@@ -84,7 +84,7 @@ var _ = Describe("Updater", func() {
 			ms := meshservice_api.NewMeshServiceResource()
 			err := resManager.Get(context.Background(), ms, store.GetByKey("backend", model.DefaultMesh))
 			g.Expect(err).ToNot(HaveOccurred())
-			g.Expect(ms.Spec.Identities).To(Equal([]meshservice_api.MeshServiceIdentity{
+			g.Expect(ms.Spec.Identities).To(Equal(&[]meshservice_api.MeshServiceIdentity{
 				{
 					Type:  meshservice_api.MeshServiceIdentityServiceTagType,
 					Value: "backend",
@@ -233,7 +233,7 @@ var _ = Describe("Updater", func() {
 		Entry("should count healthy DPPs and use MeshService.ports[].targetPort to select DP inbound", dpProxiesTestCase{
 			meshService: samples.MeshServiceBackendBuilder().
 				WithDataplaneTagsSelectorKV("app", "backend").
-				AddIntPort(builders.FirstInboundServicePort+1, builders.FirstInboundPort+1, core_mesh.ProtocolHTTP),
+				AddIntPort(int32(builders.FirstInboundServicePort+1), int32(builders.FirstInboundPort+1), core_mesh.ProtocolHTTP),
 			dpps: []*builders.DataplaneBuilder{
 				builders.Dataplane().
 					WithName("dp-all-inbounds-healthy").

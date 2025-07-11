@@ -17,6 +17,7 @@ import (
 	"github.com/kumahq/kuma/pkg/core/resources/store"
 	resources_k8s "github.com/kumahq/kuma/pkg/plugins/resources/k8s"
 	. "github.com/kumahq/kuma/pkg/test/matchers"
+	"github.com/kumahq/kuma/pkg/util/pointer"
 )
 
 func ExecuteStoreTests(
@@ -119,14 +120,14 @@ func ExecuteStoreTests(
 				created := meshservice_api.MeshServiceResource{
 					Spec: &meshservice_api.MeshService{
 						Selector: meshservice_api.Selector{
-							DataplaneTags: map[string]string{
+							DataplaneTags: &map[string]string{
 								"a": "b",
 							},
 						},
 						Ports: []meshservice_api.Port{
 							{
 								Port:        80,
-								TargetPort:  intstr.FromInt(80),
+								TargetPort:  pointer.To(intstr.FromInt(80)),
 								AppProtocol: "http",
 							},
 						},
@@ -265,14 +266,14 @@ func ExecuteStoreTests(
 				updated := meshservice_api.MeshServiceResource{
 					Spec: &meshservice_api.MeshService{
 						Selector: meshservice_api.Selector{
-							DataplaneTags: map[string]string{
+							DataplaneTags: &map[string]string{
 								"a": "b",
 							},
 						},
 						Ports: []meshservice_api.Port{
 							{
 								Port:        80,
-								TargetPort:  intstr.FromInt(80),
+								TargetPort:  pointer.To(intstr.FromInt(80)),
 								AppProtocol: "http",
 							},
 						},
@@ -332,7 +333,7 @@ func ExecuteStoreTests(
 
 				// then
 				Expect(err).To(HaveOccurred())
-				Expect(store.IsResourceNotFound(err)).To(BeTrue())
+				Expect(store.IsNotFound(err)).To(BeTrue())
 
 				// and when getting the given resource
 				getResource := core_mesh.NewTrafficRouteResource()
@@ -657,7 +658,7 @@ func ExecuteStoreTests(
 
 					// then
 					Expect(list.Pagination.Total).To(Equal(uint32(0)))
-					Expect(err).To(Equal(store.ErrorInvalidOffset))
+					Expect(store.IsInvalid(err)).To(BeTrue())
 				})
 			})
 		})

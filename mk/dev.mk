@@ -63,6 +63,7 @@ GOLANGCI_LINT=$(CI_TOOLS_BIN_DIR)/golangci-lint
 HELM_DOCS=$(CI_TOOLS_BIN_DIR)/helm-docs
 KUBE_LINTER=$(CI_TOOLS_BIN_DIR)/kube-linter
 HADOLINT=$(CI_TOOLS_BIN_DIR)/hadolint
+OAPI_CODEGEN=$(CI_TOOLS_BIN_DIR)/oapi-codegen
 
 TOOLS_DEPS_DIRS=$(KUMA_DIR)/mk/dependencies
 TOOLS_DEPS_LOCK_FILE=mk/dependencies/deps.lock
@@ -144,3 +145,8 @@ dev/set-kuma-helm-repo:
 
 .PHONY: clean
 clean: clean/build clean/generated clean/docs ## Dev: Clean
+
+.PHONY: dev/fetch-demo
+dev/fetch-demo: ## Dev: Fetch demo files
+	mkdir -p $(BUILD_DIR)/k8s
+	curl -s --fail https://raw.githubusercontent.com/kumahq/kuma-counter-demo/refs/heads/main/k8s/001-with-mtls.yaml > $(BUILD_DIR)/k8s/001-with-mtls.yaml

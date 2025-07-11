@@ -13,7 +13,6 @@ import (
 	mesh_proto "github.com/kumahq/kuma/api/mesh/v1alpha1"
 	"github.com/kumahq/kuma/pkg/config"
 	config_types "github.com/kumahq/kuma/pkg/config/types"
-	xds_types "github.com/kumahq/kuma/pkg/core/xds/types"
 	tproxy_config "github.com/kumahq/kuma/pkg/transparentproxy/config/dataplane"
 )
 
@@ -69,30 +68,6 @@ type Config struct {
 	// DNS defines a configuration for builtin DNS in Kuma DP
 	DNS                         DNS                         `json:"dns,omitempty"`
 	ApplicationProbeProxyServer ApplicationProbeProxyServer `json:"applicationProbeProxyServer,omitempty"`
-}
-
-func (c *Config) Features() []string {
-	base := []string{
-		xds_types.FeatureTCPAccessLogViaNamedPipe,
-	}
-
-	if c.DNS.ProxyPort != 0 {
-		base = append(base, xds_types.FeatureEmbeddedDNS)
-	}
-
-	if c.DataplaneRuntime.TransparentProxy != nil {
-		base = append(base, xds_types.FeatureTransparentProxyInDataplaneMetadata)
-	}
-
-	if c.DataplaneRuntime.BindOutbounds {
-		base = append(base, xds_types.FeatureBindOutbounds)
-	}
-
-	switch c.DataplaneRuntime.EnvoyXdsTransportProtocolVariant {
-	case "DELTA_GRPC":
-		base = append(base, xds_types.FeatureDeltaGRPC)
-	}
-	return base
 }
 
 func (c *Config) Sanitize() {
@@ -257,6 +232,12 @@ type DataplaneRuntime struct {
 	BindOutbounds bool `json:"bindOutbounds,omitempty" envconfig:"kuma_dataplane_runtime_bind_outbounds"`
 	// EnvoyXdsTransportProtocolVariant configures the way Envoy receives updates from the control-plane.
 	EnvoyXdsTransportProtocolVariant string `json:"envoyXdsTransportProtocolVariant,omitempty" envconfig:"kuma_dataplane_runtime_envoy_xds_transport_protocol_variant"`
+	// UnifiedResourceNamingEnabled enables the new naming format for Envoy resource and stat names.
+	// When set to true, the data plane proxy uses:
+	// - KRI-based format for resources tied to distinct Kuma resources
+	// - System format for internal Kuma resources that users typically don't need to care about unless debugging Kuma
+	// - Contextual format for proxy-scoped resources like inbounds and transparent proxy passthrough
+	UnifiedResourceNamingEnabled bool `json:"unifiedResourceNamingEnabled,omitempty" envconfig:"kuma_dataplane_runtime_unified_resource_naming_enabled"`
 }
 
 type Metrics struct {
